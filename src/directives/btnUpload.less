@@ -1,0 +1,35 @@
+// A Bootstrap button that goes well with uploadButton
+// Simply add the btn-upload class to hide the normal browse button
+
+@import "../../bower_components/bootstrap/less/mixins.less";
+
+.btn-upload {
+  position: relative;
+  overflow: hidden;
+  float: left;
+  margin-right: 4px;
+
+  input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    .opacity(0);
+    transform: translate(-300px, 0) scale(4);
+    font-size: 23px;
+    direction: ltr;
+    cursor: pointer;
+  }
+}
+
+// Fix for IE 6
+* html .btn-upload {
+  line-height: 24px;
+  margin: 1px -3px 0 0;
+}
+
+// Fix for IE 7
+* + html .btn-upload {
+  padding: 2px 15px;
+  margin: 1px 0 0 0;
+}
