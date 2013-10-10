@@ -1,8 +1,6 @@
 // A Bootstrap button that goes well with uploadButton
 // Simply add the btn-upload class to hide the normal browse button
 
-@import "../../bower_components/bootstrap/less/mixins.less";
-
 .btn-upload {
   position: relative;
   overflow: hidden;
@@ -14,7 +12,8 @@
     top: 0;
     right: 0;
     margin: 0;
-    .opacity(0);
+    opacity: 0;
+    filter: ~"alpha(opacity=0)";
     transform: translate(-300px, 0) scale(4);
     font-size: 23px;
     direction: ltr;
