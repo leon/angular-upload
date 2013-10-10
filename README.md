@@ -86,3 +86,27 @@ And your good to go!
           console.log(response.data);
         };
     }
+
+
+## Build it yourself!
+angular-upload is built with grunt and has a express backend for testing.
+
+Start by installing npm if you don't have it already
+
+via homebrew or homepage (http://nodejs.org/download/)
+
+    brew install nodejs
+
+then
+
+    npm install -g grunt-cli karma
+
+then from within angular-upload
+
+    npm install && bower install
+
+then you can start the testserver up with
+
+    grunt server
+
+and you can access it through http://localhost:9001 and test the uploader
