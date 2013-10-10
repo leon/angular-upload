@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>File Upload Example</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="/public/src/directives/btnUpload.min.css" />
+  <!--[if lt IE 9]>
+    <script src="/public/bower_components/es5-shim/es5-shim.min.js"></script>
+    <script src="/public/bower_components/json3/lib/json3.min.js"></script>
+    <script src="/public/bower_components/html5shiv/dist/html5shiv.js"></script>
+    <script src="/public/bower_components/respond/respond.min.js"></script>
+  <![endif]-->
+  <script src="/public/bower_components/angular/angular.js" charset="utf-8"></script>
+  <script src="/public/angular-upload.js" charset="utf-8"></script>
+
+  <script charset="utf-8">
+
+    // Define our main app
+    var app = angular.module('app', [
+      'lr-upload'
+    ]);
+
+    app.controller('AppCtrl', function ($scope, $http) {
+      $http({
+        method: 'get',
+        url: '/uploads',
+        cache: false
+      }).then(function (response) {
+        $scope.uploads = response.data;
+      });
+
+      $scope.onSuccess = function (response) {
+        $scope.responseData = response.data;
+        $scope.uploads = $scope.uploads.concat(response.data.files);
+      };
+    });
+
+    // Start it up
+    angular.element(document).ready(function () {
+      angular.bootstrap(document, ['app']);
+    });
+  </script>
+</head>
+<body>
+  <div class="container" ng-controller="AppCtrl">
+    <div class="jumbotron">
+      <div class="jumbotron-body">
+        <h1>Upload</h1>
+        <p>Upload using FormData or fallback to posting to an iframe</p>
+        <p>check the example folder to see the files that are uploaded and the express.js server that is used as the backend.</p>
+        <p>Works in all browsers, even IE6 :)</p>
+        <p>Has no dependency on jQuery</p>
+      </div>
+    </div>
+
+    <div class="alert alert-info" ng-show="responseData">
+      <strong>Last upload response</strong>
+      {{responseData | json}}
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="checkbox">
+          <label for="allow-forceiframe">
+            <input id="allow-forceiframe" type="checkbox" ng-model="forceIframeUpload" /> Force IFrame upload
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label for="allow-multiple">
+            <input id="allow-multiple" type="checkbox" ng-model="allowMultiple" /> Allow Multiple (only works with FormData upload)
+          </label>
+        </div>
+
+        <div class="btn-upload" upload-button url="/upload" on-success="onSuccess(response)" multiple="allowMultiple" force-iframe-upload="forceIframeUpload">
+          <button class="btn btn-primary">Fileupload</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-lg list-group">
+      <a class="list-group-item" ng-href="/uploads/{{file}}" download ng-repeat="file in uploads">{{file}}</a>
+    </div>
+  </div>
+</body>
+</html>
