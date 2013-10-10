@@ -11,6 +11,23 @@ The code is heavily inspired by the great [jQuery-File-Upload](https://github.co
 **This is a prototype** so it will contain bugs, and it isn't nowhere as complete as jQuery File Upload.
 
 ## Usage
+Install via bower
+
+  bower install --save angular-upload
+
+Add the module to your app dependencies and include it in your page
+
+  angular.module('app', [
+    'lr-upload'
+  ]);
+
+  bower_components/angular-upload/angular-upload.min.js
+
+and to your less/css if you want the nice button
+
+  bower_components/angular-upload/src/directives/btnUpload.less or .css
+
+And your good to go!
 
 ### The upload service can be used this way.
 
