@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lr-upload.formdata', [])
+angular.module('lr.upload.formdata', [])
 
   // Convert all data properties to FormData,
   // if they are a jqLite element, extract the files from the input

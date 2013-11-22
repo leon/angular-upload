@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lr-upload.directives').directive('uploadButton', function(upload) {
+angular.module('lr.upload.directives').directive('uploadButton', function(upload) {
   return {
     restrict: 'EA',
     scope: {

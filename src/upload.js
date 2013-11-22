@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lr-upload').factory('upload', function ($window, formDataUpload, iFrameUpload) {
+angular.module('lr.upload').factory('upload', function ($window, formDataUpload, iFrameUpload) {
   var support = {
     // Detect file input support, based on
     // http://viljamis.com/blog/2012/file-upload-support-on-mobile/

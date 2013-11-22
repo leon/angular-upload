@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lr-upload.iframe', []).factory('iFrameUpload', function ($q, $http, $document, $rootScope) {
+angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $http, $document, $rootScope) {
 
   function indexOf(array, obj) {
     if (array.indexOf) {

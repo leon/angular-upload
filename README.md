@@ -18,7 +18,7 @@ Install via bower
 Add the module to your app dependencies and include it in your page
 
   angular.module('app', [
-    'lr-upload'
+    'lr.upload'
   ]);
 
   bower_components/angular-upload/angular-upload.min.js
