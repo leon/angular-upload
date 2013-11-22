@@ -34,7 +34,7 @@ angular.module('lr.upload.formdata', [])
     return function formDataUpload(config) {
       return $http(angular.extend(config, {
         headers: {
-          'Content-Type': false
+          'Content-Type': undefined
         },
         transformRequest: formDataTransform
       }));
