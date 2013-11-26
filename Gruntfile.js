@@ -132,7 +132,7 @@ module.exports = function (grunt) {
     'karma:continuous'
   ]);
 
-  grunt.registerTask('server', [
+  grunt.registerTask('webserver', [
     'concat',
     'less:dev',
     'jshint',
@@ -140,14 +140,14 @@ module.exports = function (grunt) {
     'watch',
   ]);
 
-  grunt.registerTask('testserver', [
+  grunt.registerTask('autotest', [
     'concat',
     'karma:unit',
     'karma:unit:run',
     'watch'
   ]);
 
-  grunt.registerTask('build', [
+  grunt.registerTask('package', [
     'clean:dist',
     'concat',
     'ngmin:dist',
@@ -156,7 +156,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'build',
+    'package',
     'test'
   ]);
 
