@@ -107,6 +107,18 @@ then from within angular-upload
 
 then you can start the testserver up with
 
-    grunt server
+    grunt webserver
 
 and you can access it through http://localhost:9001 and test the uploader
+
+To run the tests
+
+    grunt test
+
+or run in autotest mode
+
+    grunt autotest
+
+And when you're done minify it
+
+    grunt package

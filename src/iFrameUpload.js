@@ -22,7 +22,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
     var deferred = $q.defer(),
     promise = deferred.promise;
 
-    // Extract Files from
+    // Extract file elements from the within config.data
     angular.forEach(config.data || {}, function (value, key) {
       if (angular.isElement(value)) {
         delete config.data[key];
@@ -62,10 +62,15 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
 
     // Add iframe that we will post to
     var iframe = angular.element('<iframe name="' + uniqueName + '" src="javascript:false;"></iframe>');
-    iframe.bind('load', function () {
+
+    // The first load is called when the javascript:false is loaded,
+    // that means we can continue with adding the hidden form and posting it to the iframe;
+    iframe.on('load', function () {
       iframe
-        .unbind('load')
-        .bind('load', function () {
+        .off('load')
+        .on('load', function () {
+          // The upload is complete and we not need to parse the contents and resolve the deferred
+
           var response;
           // Wrap in a try/catch block to catch exceptions thrown
           // when trying to access cross-domain iframe contents:
@@ -99,17 +104,19 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
 
       // Move file inputs to hidden form
       angular.forEach(files, function (input) {
+
         var clone = input.clone();
+
+        // Save original in clone
+        clone.data('$originalInput', input);
 
         // Save clones so that we can put them back later
         fileClones.push(clone);
 
-        // @fix Workaround intil jqLite can handle .after with cloned elements
-        //body.append(clone);
-
+        // Insert clone directly after input
         input.after(clone);
 
-        // move original input to hidden form
+        // Move original input to hidden form
         form.append(input);
       });
 
@@ -156,9 +163,10 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
 
       // Put original inputs back
       if (fileClones && fileClones.length) {
-        angular.forEach(files, function (input, index) {
-          var clone = fileClones[index];
-          clone.replaceWith(input);
+        angular.forEach(fileClones, function (clone) {
+          var original = clone.data('$originalInput');
+          clone.after(original);
+          clone.remove();
         });
       }
 

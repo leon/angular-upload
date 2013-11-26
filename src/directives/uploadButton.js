@@ -26,7 +26,7 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       });
 
       var fileInput = angular.element('<input type="file" />');
-      fileInput.bind('change', function () {
+      fileInput.on('change', function uploadButtonFileInputChange() {
         if (!scope.options) {
           scope.options = {};
         }
@@ -53,7 +53,7 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       el.append(fileInput);
 
       if (upload.support.formData) {
-        scope.$watch('multiple + forceIFrameUpload', function (value) {
+        scope.$watch('multiple + forceIFrameUpload', function uploadButtonWatch(value) {
           fileInput.attr('multiple', !!(value && !scope.forceIFrameUpload));
         });
       }
