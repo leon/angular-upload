@@ -36,7 +36,7 @@ angular.module('lr.upload.directives').directive('uploadButton', [
             scope.options = {};
           }
           var options = {
-              url: scope.url,
+              url: scope.url || scope.options.url,
               method: scope.method || scope.options.method || 'POST',
               forceIFrameUpload: scope.forceIFrameUpload || scope.options.forceIFrameUpload || false,
               data: scope.options.data || {}
