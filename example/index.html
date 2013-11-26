@@ -27,7 +27,7 @@
     app.controller('AppCtrl', function ($scope, $http) {
       $http({
         method: 'get',
-        url: '/uploads',
+        url: '/uploads?' + new Date().getTime(),
         cache: false
       }).then(function (response) {
         $scope.uploads = response.data;
