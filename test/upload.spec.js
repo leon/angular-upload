@@ -1,11 +1,11 @@
 'use strict';
 
-ddescribe('upload', function () {
+describe('upload', function () {
 
   var $compile, $rootScope, upload;
 
   beforeEach(function () {
-    angular.mock.module('lr-upload');
+    angular.mock.module('lr.upload');
 
     inject(function ($injector) {
       $compile = $injector.get('$compile');

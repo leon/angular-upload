@@ -5,7 +5,7 @@ describe('btnUpload', function () {
   var $compile, $rootScope;
 
   beforeEach(function () {
-    angular.mock.module('lr-upload.directives');
+    angular.mock.module('lr.upload');
 
     inject(function ($injector) {
       $compile = $injector.get('$compile');

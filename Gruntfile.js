@@ -15,12 +15,30 @@ module.exports = function (grunt) {
 
     // Testing
     karma: {
-      unit: {
+      options: {
         configFile: 'karma.conf.js',
+        files: [
+          'bower_components/es5-shim/es5-shim.js',
+          'bower_components/angular/angular.js',
+          'bower_components/angular-mocks/angular-mocks.js',
+          conf.src,
+          conf.unit
+        ]
+      },
+      unit: {
+        options: {
+          browsers: [
+            'Chrome'
+          ]
+        },
         background: true
       },
       continuous: {
-        configFile: 'karma.conf.js',
+        options: {
+          browsers: [
+            'PhantomJS'
+          ]
+        },
         singleRun: true
       }
     },
@@ -157,6 +175,11 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'package',
+    'test'
+  ]);
+
+  grunt.registerTask('travis', [
+    'jshint',
     'test'
   ]);
 

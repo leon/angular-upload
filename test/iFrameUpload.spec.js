@@ -1,11 +1,11 @@
 'use strict';
 
-ddescribe('UploadForm', function () {
+describe('UploadForm', function () {
 
   var $compile, $rootScope, iFrameUpload;
 
   beforeEach(function () {
-    angular.mock.module('lr-upload.iframe');
+    angular.mock.module('lr.upload.iframe');
 
     inject(function ($injector) {
       $compile = $injector.get('$compile');
