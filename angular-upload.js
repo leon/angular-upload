@@ -1,12 +1,12 @@
 'use strict';
-angular.module('lr-upload', [
-  'lr-upload.formdata',
-  'lr-upload.iframe',
-  'lr-upload.directives'
+angular.module('lr.upload', [
+  'lr.upload.formdata',
+  'lr.upload.iframe',
+  'lr.upload.directives'
 ]);
-angular.module('lr-upload.directives', []);
+angular.module('lr.upload.directives', []);
 'use strict';
-angular.module('lr-upload.directives').directive('uploadButton', [
+angular.module('lr.upload.directives').directive('uploadButton', [
   'upload',
   function (upload) {
     return {
@@ -31,7 +31,7 @@ angular.module('lr-upload.directives').directive('uploadButton', [
           cursor: 'pointer'
         });
         var fileInput = angular.element('<input type="file" />');
-        fileInput.bind('change', function () {
+        fileInput.on('change', function uploadButtonFileInputChange() {
           if (!scope.options) {
             scope.options = {};
           }
@@ -50,7 +50,7 @@ angular.module('lr-upload.directives').directive('uploadButton', [
         });
         el.append(fileInput);
         if (upload.support.formData) {
-          scope.$watch('multiple + forceIFrameUpload', function (value) {
+          scope.$watch('multiple + forceIFrameUpload', function uploadButtonWatch(value) {
             fileInput.attr('multiple', !!(value && !scope.forceIFrameUpload));
           });
         }
@@ -59,7 +59,7 @@ angular.module('lr-upload.directives').directive('uploadButton', [
   }
 ]);
 'use strict';
-angular.module('lr-upload.formdata', []).factory('formDataTransform', function () {
+angular.module('lr.upload.formdata', []).factory('formDataTransform', function () {
   return function formDataTransform(data) {
     var formData = new FormData();
     angular.forEach(data, function (value, key) {
@@ -89,14 +89,14 @@ angular.module('lr-upload.formdata', []).factory('formDataTransform', function (
   function ($http, formDataTransform) {
     return function formDataUpload(config) {
       return $http(angular.extend(config, {
-        headers: { 'Content-Type': false },
+        headers: { 'Content-Type': undefined },
         transformRequest: formDataTransform
       }));
     };
   }
 ]);
 'use strict';
-angular.module('lr-upload.iframe', []).factory('iFrameUpload', [
+angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
   '$q',
   '$http',
   '$document',
@@ -147,8 +147,8 @@ angular.module('lr-upload.iframe', []).factory('iFrameUpload', [
         form.attr('encoding', 'multipart/form-data');
       }
       var iframe = angular.element('<iframe name="' + uniqueName + '" src="javascript:false;"></iframe>');
-      iframe.bind('load', function () {
-        iframe.unbind('load').bind('load', function () {
+      iframe.on('load', function () {
+        iframe.off('load').on('load', function () {
           var response;
           try {
             var doc = this.contentWindow ? this.contentWindow.document : this.contentDocument;
@@ -172,6 +172,7 @@ angular.module('lr-upload.iframe', []).factory('iFrameUpload', [
         });
         angular.forEach(files, function (input) {
           var clone = input.clone();
+          clone.data('$originalInput', input);
           fileClones.push(clone);
           input.after(clone);
           form.append(input);
@@ -204,9 +205,10 @@ angular.module('lr-upload.iframe', []).factory('iFrameUpload', [
         }
         form[0].submit();
         if (fileClones && fileClones.length) {
-          angular.forEach(files, function (input, index) {
-            var clone = fileClones[index];
-            clone.replaceWith(input);
+          angular.forEach(fileClones, function (clone) {
+            var original = clone.data('$originalInput');
+            clone.after(original);
+            clone.remove();
           });
         }
         promise.then(removePendingReq, removePendingReq);
@@ -219,7 +221,7 @@ angular.module('lr-upload.iframe', []).factory('iFrameUpload', [
   }
 ]);
 'use strict';
-angular.module('lr-upload').factory('upload', [
+angular.module('lr.upload').factory('upload', [
   '$window',
   'formDataUpload',
   'iFrameUpload',

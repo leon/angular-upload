@@ -1,7 +1,7 @@
 {
   "name": "angular-upload",
   "description": "AngularJS Upload, Handle your uploading with style",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "author": "Leon Radley<leon@radley.se>",
   "main": "angular-upload.js",
   "dependencies": {
@@ -13,7 +13,7 @@
     "html5shiv": "~3.7.0",
     "respond": "~1.3.0",
     "angular-mocks": ">=1.0.8",
-    "bootstrap": "3.0.0"
+    "bootstrap": "~3.0.0"
   },
   "ignore": [
     ".DS_Store",
