@@ -10,7 +10,8 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       url: '@',
       method: '@',
       onSuccess: '&',
-      onError: '&'
+      onError: '&',
+      onComplete: '&'
     },
     link: function(scope, element) {
 
@@ -43,9 +44,11 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
         upload(options).then(
           function (response) {
             scope.onSuccess({response: response});
+            scope.onComplete({response: response});
           },
           function (response) {
             scope.onError({response: response});
+            scope.onComplete({response: response});
           }
         );
       });
