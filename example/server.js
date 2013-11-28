@@ -48,7 +48,10 @@ app.post('/upload', function(req, res) {
   res.contentType('text/html');
 
   // Really should return json when all files have been saved, but we are simplifying things a bit here.
-  res.json({files: files.map(function (file) { return file.name; }) });
+  // We also delay it a bit, so we can see the nice loader
+  setTimeout((function() {
+    res.json({files: files.map(function (file) { return file.name; }) });
+  }), 2000);
 });
 
 // Fallback route for angular
