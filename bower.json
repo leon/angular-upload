@@ -1,7 +1,7 @@
 {
   "name": "angular-upload",
   "description": "AngularJS Upload, Handle your uploading with style",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "author": "Leon Radley<leon@radley.se>",
   "main": "angular-upload.js",
   "dependencies": {
