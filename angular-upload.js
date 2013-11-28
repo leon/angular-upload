@@ -18,7 +18,8 @@ angular.module('lr.upload.directives').directive('uploadButton', [
         url: '@',
         method: '@',
         onSuccess: '&',
-        onError: '&'
+        onError: '&',
+        onComplete: '&'
       },
       link: function (scope, element) {
         var el = angular.element(element);
@@ -44,8 +45,10 @@ angular.module('lr.upload.directives').directive('uploadButton', [
           options.data[scope.options.paramName || 'file'] = fileInput;
           upload(options).then(function (response) {
             scope.onSuccess({ response: response });
+            scope.onComplete({ response: response });
           }, function (response) {
             scope.onError({ response: response });
+            scope.onComplete({ response: response });
           });
         });
         el.append(fileInput);
@@ -115,7 +118,6 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
     }
     function iFrameUpload(config) {
       var files = [];
-      var fileClones = [];
       var deferred = $q.defer(), promise = deferred.promise;
       angular.forEach(config.data || {}, function (value, key) {
         if (angular.isElement(value)) {
@@ -171,9 +173,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
           });
         });
         angular.forEach(files, function (input) {
-          var clone = input.clone();
-          clone.data('$originalInput', input);
-          fileClones.push(clone);
+          var clone = input.clone(true);
           input.after(clone);
           form.append(input);
         });
@@ -204,13 +204,6 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
           }
         }
         form[0].submit();
-        if (fileClones && fileClones.length) {
-          angular.forEach(fileClones, function (clone) {
-            var original = clone.data('$originalInput');
-            clone.after(original);
-            clone.remove();
-          });
-        }
         promise.then(removePendingReq, removePendingReq);
       });
       form.append(iframe);
