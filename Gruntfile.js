@@ -153,9 +153,11 @@ module.exports = function (grunt) {
         ],
         updateConfigs: [],
         commit: true,
-        commitMessage: 'Cut %VERSION%',
+        commitMessage: '%VERSION%',
         commitFiles: [
           'CHANGELOG.md',
+          'package.json',
+          'bower.json',
           'src/directives/btnUpload.less',
           'src/directives/btnUpload.min.css',
           'angular-upload.js',
