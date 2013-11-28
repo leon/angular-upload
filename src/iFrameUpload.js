@@ -17,7 +17,6 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
 
   function iFrameUpload(config) {
     var files = [];
-    var fileClones = [];
 
     var deferred = $q.defer(),
     promise = deferred.promise;
@@ -105,13 +104,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
       // Move file inputs to hidden form
       angular.forEach(files, function (input) {
 
-        var clone = input.clone();
-
-        // Save original in clone
-        clone.data('$originalInput', input);
-
-        // Save clones so that we can put them back later
-        fileClones.push(clone);
+        var clone = input.clone(true);
 
         // Insert clone directly after input
         input.after(clone);
@@ -160,15 +153,6 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
 
       // submit the form and wait for a response
       form[0].submit();
-
-      // Put original inputs back
-      if (fileClones && fileClones.length) {
-        angular.forEach(fileClones, function (clone) {
-          var original = clone.data('$originalInput');
-          clone.after(original);
-          clone.remove();
-        });
-      }
 
       promise.then(removePendingReq, removePendingReq);
     });
