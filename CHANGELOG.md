@@ -1,3 +1,7 @@
+# 1.0.2
+ - Don't replace the clone when done uploading, since you usually want the input to be cleared.
+ - Added onComplete that fires for both success and failure
+
 # 1.0.1
  - Fixed #4 should allow setting url from options object
 
