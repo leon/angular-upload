@@ -142,6 +142,32 @@ module.exports = function (grunt) {
           src: ['<%= config.less %>']
         }]
       }
+    },
+
+    // Releasing
+    bump: {
+      options: {
+        files: [
+          'package.json',
+          'bower.json'
+        ],
+        updateConfigs: [],
+        commit: true,
+        commitMessage: 'Cut %VERSION%',
+        commitFiles: [
+          'CHANGELOG.md',
+          'src/directives/btnUpload.less',
+          'src/directives/btnUpload.min.css',
+          'angular-upload.js',
+          'angular-upload.min.js'
+        ],
+        createTag: true,
+        tagName: '%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: true,
+        pushTo: 'origin',
+        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+      }
     }
   });
 
@@ -182,5 +208,10 @@ module.exports = function (grunt) {
     'jshint',
     'test'
   ]);
+
+  grunt.registerTask('release', [
+    'package',
+    'bump'
+  ])
 
 };
