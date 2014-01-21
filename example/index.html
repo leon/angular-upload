@@ -25,6 +25,10 @@
     ]);
 
     app.controller('AppCtrl', function ($scope, $http) {
+
+      // Valid mimetypes
+      $scope.acceptTypes = 'image/*,application/pdf';
+
       $http({
         method: 'get',
         url: '/uploads?' + new Date().getTime(),
@@ -76,7 +80,12 @@
           </label>
         </div>
 
-        <div class="btn-upload" upload-button url="/upload" on-success="onSuccess(response)" multiple="allowMultiple" force-iframe-upload="forceIframeUpload">
+        <div class="form-group">
+          <label for="accept-mimetypes">Allowed mimetypes. example "image/jpeg,application/pdf" the accept attribute on upload-button also allows for a javascript array of mimetypes</label>
+          <input id="accept-mimetypes" class="form-control" type="text" ng-model="acceptTypes" />
+        </div>
+
+        <div class="btn-upload" upload-button url="/upload" accept="acceptTypes" on-success="onSuccess(response)" multiple="allowMultiple" force-iframe-upload="forceIframeUpload">
           <button class="btn btn-primary">Fileupload</button>
         </div>
       </div>
