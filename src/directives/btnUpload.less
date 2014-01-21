@@ -3,6 +3,7 @@
 
 .btn-upload {
   position: relative;
+  display: inline-block;
   overflow: hidden;
 
   input {
@@ -13,6 +14,9 @@
     opacity: 0;
     filter: ~"alpha(opacity=0)";
     transform: translate(-300px, 0) scale(4);
+    -webkit-transform: translate(-300px, 0) scale(4);
+    -ms-transform: translate(-300px, 0) scale(4);
+    -o-transform: translate(-300px, 0) scale(4);
     font-size: 23px;
     direction: ltr;
     cursor: pointer;
