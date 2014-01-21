@@ -15,12 +15,14 @@ angular.module('lr.upload.formdata', [])
               files.push(file);
             });
           });
-          if (files.length > 1) {
-            angular.forEach(files, function (file, index) {
-              formData.append(key + '[' + index + ']', file);
-            });
-          } else {
-            formData.append(key, files[0]);
+          if (files.length !== 0) {
+            if (files.length > 1) {
+              angular.forEach(files, function (file, index) {
+                formData.append(key + '[' + index + ']', file);
+              });
+            } else {
+              formData.append(key, files[0]);
+            }
           }
         } else {
           formData.append(key, value);
