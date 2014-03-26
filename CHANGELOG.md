@@ -1,3 +1,7 @@
+# 1.0.6
+ - uploadButton
+  - one way databinding for accept and multiple and forceIFrame
+
 # 1.0.5
  - uploadButton
   - Only upload if any files where selected

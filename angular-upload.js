@@ -13,9 +13,9 @@ angular.module('lr.upload.directives').directive('uploadButton', [
       restrict: 'EA',
       scope: {
         options: '=?uploadButton',
-        multiple: '=?',
-        accept: '=?',
-        forceIFrameUpload: '=?forceIframeUpload',
+        multiple: '@',
+        accept: '@',
+        forceIFrameUpload: '@forceIframeUpload',
         url: '@',
         method: '@',
         onSuccess: '&',
