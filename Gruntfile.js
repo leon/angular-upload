@@ -6,12 +6,16 @@ module.exports = function (grunt) {
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  var conf = require('./Gruntfile.conf.js');
-
   grunt.initConfig({
 
-    // Load Config
-    config: conf,
+    config: {
+      src: 'src/**/*.js',
+      unit: 'test/**/*.js',
+      e2e: 'e2e/**/*.js',
+      less: 'src/**/*.less',
+      dist: 'angular-upload.js',
+      minified: 'angular-upload.min.js'
+    },
 
     // Testing
     karma: {
@@ -21,8 +25,8 @@ module.exports = function (grunt) {
           'bower_components/es5-shim/es5-shim.js',
           'bower_components/angular/angular.js',
           'bower_components/angular-mocks/angular-mocks.js',
-          conf.src,
-          conf.unit
+          '<%= config.src %>',
+          '<%= config.unit %>'
         ]
       },
       unit: {
@@ -214,6 +218,6 @@ module.exports = function (grunt) {
   grunt.registerTask('release', [
     'package',
     'bump'
-  ])
+  ]);
 
 };

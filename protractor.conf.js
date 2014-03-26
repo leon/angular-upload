@@ -4,7 +4,7 @@ exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   //sauceUser: "leon",
   //sauceKey: "1234",
-  specs: [conf.e2e],
+  specs: ['e2e/**/*.js'],
 
   capabilities: {
     browserName: 'chrome'

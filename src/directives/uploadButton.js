@@ -6,6 +6,7 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
     scope: {
       options: '=?uploadButton',
       multiple: '=?',
+      accept: '=?',
       forceIFrameUpload: '=?forceIframeUpload',
       url: '@',
       method: '@',
@@ -27,7 +28,13 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       });
 
       var fileInput = angular.element('<input type="file" />');
+
       fileInput.on('change', function uploadButtonFileInputChange() {
+
+        if (fileInput[0].files && fileInput[0].files.length === 0) {
+          return;
+        }
+
         if (!scope.options) {
           scope.options = {};
         }
@@ -53,10 +60,14 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
         );
       });
 
+      scope.$watch('accept', function uploadButtonAcceptWatch(value) {
+        fileInput.attr('accept', angular.isArray(value) ? value.join(',') : value);
+      });
+
       el.append(fileInput);
 
       if (upload.support.formData) {
-        scope.$watch('multiple + forceIFrameUpload', function uploadButtonWatch(value) {
+        scope.$watch('multiple + forceIFrameUpload', function uploadButtonMultipleWatch(value) {
           fileInput.attr('multiple', !!(value && !scope.forceIFrameUpload));
         });
       }

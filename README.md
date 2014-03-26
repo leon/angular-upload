@@ -68,7 +68,7 @@ angular.module('app').controller('AppCtrl', function ($scope, upload) {
 ### Or via the upload-button directive
 ```html
 <body>
-  <div class="btn-upload" upload-button url="/upload" on-success="onSuccess(response)" multiple="true">
+  <div class="btn-upload" upload-button url="/upload" accept="image/*" on-success="onSuccess(response)" multiple="true">
     <button class="btn btn-primary">Fileupload</button>
   </div>
 </body>
@@ -112,7 +112,7 @@ brew install nodejs
 ```
 then
 ```sh
-npm install -g grunt-cli karma
+npm install -g grunt-cli karma-cli
 ```
 then from within angular-upload
 ```sh
@@ -120,7 +120,7 @@ npm install && bower install
 ```
 then you can start the testserver up with
 ```sh
-grunt server
+grunt webserver
 ```
 
 and you can access it through http://localhost:9001 and test the uploader
