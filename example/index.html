@@ -85,9 +85,7 @@
           <input id="accept-mimetypes" class="form-control" type="text" ng-model="acceptTypes" />
         </div>
 
-        <div class="btn-upload" upload-button url="/upload" accept="{{acceptTypes}}" on-success="onSuccess(response)" multiple="{{allowMultiple}}" force-iframe-upload="{{forceIframeUpload}}">
-          <button class="btn btn-primary">Fileupload</button>
-        </div>
+        <div class="btn btn-primary btn-upload" upload-button url="/upload" accept="{{acceptTypes}}" on-success="onSuccess(response)" multiple="{{allowMultiple}}" force-iframe-upload="{{forceIframeUpload}}">Fileupload</div>
       </div>
     </div>
 
