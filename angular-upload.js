@@ -22,7 +22,7 @@ angular.module('lr.upload.directives').directive('uploadButton', [
         onError: '&',
         onComplete: '&'
       },
-      link: function (scope, element) {
+      link: function (scope, element, attr) {
         var el = angular.element(element);
         var fileInput = angular.element('<input type="file" />');
         fileInput.on('change', function uploadButtonFileInputChange() {
@@ -47,14 +47,16 @@ angular.module('lr.upload.directives').directive('uploadButton', [
             scope.onComplete({ response: response });
           });
         });
-        scope.$watch('accept', function uploadButtonAcceptWatch(value) {
+        attr.$observe('accept', function uploadButtonAcceptObserve(value) {
           fileInput.attr('accept', angular.isArray(value) ? value.join(',') : value);
         });
         el.append(fileInput);
         if (upload.support.formData) {
-          scope.$watch('multiple + forceIFrameUpload', function uploadButtonMultipleWatch(value) {
-            fileInput.attr('multiple', !!(value && !scope.forceIFrameUpload));
-          });
+          var uploadButtonMultipleObserve = function () {
+            fileInput.attr('multiple', !!(scope.multiple && !scope.forceIFrameUpload));
+          };
+          attr.$observe('multiple', uploadButtonMultipleObserve);
+          attr.$observe('forceIFrameUpload', uploadButtonMultipleObserve);
         }
       }
     };
@@ -64,15 +66,21 @@ angular.module('lr.upload.directives').directive('uploadButton', [
 angular.module('lr.upload.formdata', []).factory('formDataTransform', function () {
   return function formDataTransform(data) {
     var formData = new FormData();
+    // Extract file elements from within config.data
     angular.forEach(data, function (value, key) {
+      // If it's an element that means we should extract the files
       if (angular.isElement(value)) {
         var files = [];
+        // Extract all the Files from the element
         angular.forEach(value, function (el) {
           angular.forEach(el.files, function (file) {
             files.push(file);
           });
         });
+        // Do we have any files?
         if (files.length !== 0) {
+          // If we have multiple files we send them as a 0 based array of params
+          // file[0]=file1&file[1]=file2...
           if (files.length > 1) {
             angular.forEach(files, function (file, index) {
               formData.append(key + '[' + index + ']', file);
@@ -82,6 +90,7 @@ angular.module('lr.upload.formdata', []).factory('formDataTransform', function (
           }
         }
       } else {
+        // If it's not a element we append the data as normal
         formData.append(key, value);
       }
     });
@@ -92,10 +101,11 @@ angular.module('lr.upload.formdata', []).factory('formDataTransform', function (
   'formDataTransform',
   function ($http, formDataTransform) {
     return function formDataUpload(config) {
-      return $http(angular.extend(config, {
-        headers: { 'Content-Type': undefined },
-        transformRequest: formDataTransform
-      }));
+      // Apply FormData transform to the request
+      config.transformRequest = formDataTransform;
+      // Extend the headers so that the browser will set the correct content type
+      config.headers = angular.extend(config.headers || {}, { 'Content-Type': undefined });
+      return $http(config);
     };
   }
 ]);
@@ -120,6 +130,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
     function iFrameUpload(config) {
       var files = [];
       var deferred = $q.defer(), promise = deferred.promise;
+      // Extract file elements from the within config.data
       angular.forEach(config.data || {}, function (value, key) {
         if (angular.isElement(value)) {
           delete config.data[key];
@@ -127,7 +138,9 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
           files.push(value);
         }
       });
+      // If the method is something else than POST append the _method parameter
       var addParamChar = /\?/.test(config.url) ? '&' : '?';
+      // XDomainRequest only supports GET and POST:
       if (config.method === 'DELETE') {
         config.url = config.url + addParamChar + '_method=DELETE';
         config.method = 'POST';
@@ -139,7 +152,11 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
         config.method = 'POST';
       }
       var body = angular.element($document[0].body);
-      var uniqueName = 'iframe-transport-' + $rootScope.$new().$id;
+      // Generate a unique name using getUid() https://github.com/angular/angular.js/blob/master/src/Angular.js#L292
+      // But since getUid isn't exported we get it from a temporary scope
+      var uniqueScope = $rootScope.$new();
+      var uniqueName = 'iframe-transport-' + uniqueScope.$id;
+      uniqueScope.$destroy();
       var form = angular.element('<form></form>');
       form.attr('target', uniqueName);
       form.attr('action', config.url);
@@ -147,21 +164,34 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
       form.css('display', 'none');
       if (files.length) {
         form.attr('enctype', 'multipart/form-data');
+        // enctype must be set as encoding for IE:
         form.attr('encoding', 'multipart/form-data');
       }
+      // Add iframe that we will post to
       var iframe = angular.element('<iframe name="' + uniqueName + '" src="javascript:false;"></iframe>');
+      // The first load is called when the javascript:false is loaded,
+      // that means we can continue with adding the hidden form and posting it to the iframe;
       iframe.on('load', function () {
         iframe.off('load').on('load', function () {
+          // The upload is complete and we not need to parse the contents and resolve the deferred
           var response;
+          // Wrap in a try/catch block to catch exceptions thrown
+          // when trying to access cross-domain iframe contents:
           try {
             var doc = this.contentWindow ? this.contentWindow.document : this.contentDocument;
             response = angular.element(doc.body).text();
+            // Google Chrome and Firefox do not throw an
+            // exception when calling iframe.contents() on
+            // cross-domain requests, so we unify the response:
             if (!response.length) {
               throw new Error();
             }
           } catch (e) {
           }
+          // Fix for IE endless progress bar activity bug
+          // (happens on form submits to iframe targets):
           form.append(angular.element('<iframe src="javascript:false;"></iframe>'));
+          // Convert response into JSON
           try {
             response = transformData(response, $http.defaults.transformResponse);
           } catch (e) {
@@ -173,11 +203,20 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
             config: config
           });
         });
+        // Move file inputs to hidden form
         angular.forEach(files, function (input) {
+          // Clone the original input also cloning it's event
+          // @fix jQuery supports the option of cloning with events, but angular doesn't
+          // this means that if you don't use jQuery the input will only work the first time.
+          // because when we place the clone in the originals place we will not have a
+          // change event hooked on to it.
           var clone = input.clone(true);
+          // Insert clone directly after input
           input.after(clone);
+          // Move original input to hidden form
           form.append(input);
         });
+        // Add all existing data as hidden variables
         angular.forEach(config.data, function (value, name) {
           var input = angular.element('<input type="hidden" />');
           input.attr('name', name);
@@ -185,8 +224,11 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
           form.append(input);
         });
         config.$iframeTransportForm = form;
+        // Add the config to the $http pending requests to indicate that we are doing a request via the iframe
         $http.pendingRequests.push(config);
+        // Transform data using $http.defaults.response
         function transformData(data, fns) {
+          // An iframe doesn't support headers :(
           var headers = [];
           if (angular.isFunction(fns)) {
             return fns(data, headers);
@@ -196,6 +238,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
           });
           return data;
         }
+        // Remove everything when we are done
         function removePendingReq() {
           var idx = indexOf($http.pendingRequests, config);
           if (idx !== -1) {
@@ -204,6 +247,7 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
             delete config.$iframeTransportForm;
           }
         }
+        // submit the form and wait for a response
         form[0].submit();
         promise.then(removePendingReq, removePendingReq);
       });
