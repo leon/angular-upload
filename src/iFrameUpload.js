@@ -45,7 +45,12 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
     }
 
     var body = angular.element($document[0].body);
-    var uniqueName = 'iframe-transport-' + $rootScope.$new().$id;
+
+    // Generate a unique name using getUid() https://github.com/angular/angular.js/blob/master/src/Angular.js#L292
+    // But since getUid isn't exported we get it from a temporary scope
+    var uniqueScope = $rootScope.$new();
+    var uniqueName = 'iframe-transport-' + uniqueScope.$id;
+    uniqueScope.$destroy();
 
     var form = angular.element('<form></form>');
     form.attr('target', uniqueName);
@@ -104,6 +109,11 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
       // Move file inputs to hidden form
       angular.forEach(files, function (input) {
 
+        // Clone the original input also cloning it's event
+        // @fix jQuery supports the option of cloning with events, but angular doesn't
+        // this means that if you don't use jQuery the input will only work the first time.
+        // because when we place the clone in the originals place we will not have a
+        // change event hooked on to it.
         var clone = input.clone(true);
 
         // Insert clone directly after input
