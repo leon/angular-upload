@@ -1,6 +1,6 @@
 {
   "name": "angular-upload",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "AngularJS Upload, Handle your uploading with style",
   "main": "angular-upload.js",
   "scripts": {
