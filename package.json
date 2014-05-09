@@ -44,5 +44,7 @@
     "grunt-express": "~1.2.1",
     "express": "~3.4.8",
     "ejs": "~0.8.4"
+    "express": "~4.1.2",
+    "formidable": "~1.0.14",
   }
 }

@@ -4,24 +4,21 @@ var path = require('path');
 var fs = require('fs');
 var util = require('util');
 var express = require('express');
+var formidable = require('formidable');
 
 var app = express();
-app.use(express.bodyParser());
+var router = express.Router();
 
 app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname);
 app.set('view engine', 'html');
 
 // Static files
-app.use('/public', express.static(path.join(__dirname, './../')));
-app.use('/uploads', express.static(path.join(__dirname, './uploads')));
-
-// Routing
-app.use(app.router);
+router.use('/public', express.static(path.join(__dirname, './../')));
+router.use('/uploads', express.static(path.join(__dirname, './uploads')));
 
 var uploadPath = path.resolve(__dirname + '/uploads/');
-
-app.get('/uploads', function (req, res) {
+router.get('/uploads', function (req, res) {
   fs.readdir(uploadPath, function (err, files) {
     if (err) {
       res.json([]);
@@ -30,15 +27,20 @@ app.get('/uploads', function (req, res) {
   })
 });
 
-app.post('/upload', function(req, res) {
-  var files = util.isArray(req.files.file) ? req.files.file : [req.files.file];
+router.post('/upload', function (req, res) {
+  var form = new formidable.IncomingForm();
+  form.keepExtensions = true;
 
-  console.log(files);
+  // Enable multi upload
+  form.multiples = true;
 
-  files.forEach(function (file) {
-    fs.rename(file.path, path.resolve(uploadPath, file.name), function(err) {
-      if (err) throw err;
-      fs.unlink(file.path, function() {
+  form.parse(req, function (err, fields, files) {
+    Object.keys(files).forEach(function (key) {
+      var file = files[key];
+
+      console.log(file);
+
+      fs.rename(file.path, path.resolve(uploadPath, file.name), function(err) {
         if (err) throw err;
       });
     });
@@ -59,7 +61,9 @@ var index = function (req, res) {
   res.render('index');
 }
 
-app.get('*', index);
-app.get('/', index);
+router.get('*', index);
+router.get('/', index);
+
+app.use('/', router);
 
 module.exports = app;

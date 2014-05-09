@@ -83,12 +83,14 @@ module.exports = function (grunt) {
     },
 
     express: {
+      options: {
+        port: 9001,
+        hostname: '*',
+        livereload: true,
+        serverreload: true
+      },
       server: {
         options: {
-          hostname: '*',
-          debug: true,
-          livereload: true,
-          port: 9001,
           server: path.resolve('./example/server')
         }
       }
