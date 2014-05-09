@@ -1,3 +1,9 @@
+# 1.0.8
+ - Retain headers if there are any #15
+
+# 1.0.7
+ - Removed javascript styling of upload button that was causing width=0 height=0
+
 # 1.0.6
  - uploadButton
   - one way databinding for accept and multiple and forceIFrame

@@ -16,8 +16,6 @@ Install via bower
 bower install --save angular-upload
 ```
 
-  bower install --save angular-upload
-
 Add the module to your app dependencies and include it in your page
 ```js
 angular.module('app', [
@@ -28,15 +26,51 @@ angular.module('app', [
 <script src='bower_components/angular-upload/angular-upload.min.js'></script>
 ```
 
-and to your less/css if you want the nice button
+and to your less/css if you want the upload button
 
 ```css
-@import "bower_components/angular-upload/src/directives/btnUpload.less"; /* or .css */
+@import "bower_components/angular-upload/src/directives/btnUpload.less"; /* or .min.css */
 ```
 
 And you are good to go!
 
-### The upload service can be used this way.
+## Usage
+
+### Upload button
+The upload button masks the normal file input and makes it look like a button
+
+```html
+<div
+  class="btn btn-primary btn-upload"
+  upload-button
+
+  // Optional, object with all or some of the options below
+  options="uploadOptions"
+
+  // Mandatory, the url of the backend that is going to handle the upload
+  url="/upload"
+
+  // Optional, comma separated list or array of allowed mimetypes, defaults to allowing all types
+  accept="{{acceptTypes}}"
+
+  // Optional, Allow selecting multiple files, defaults to false
+  multiple="{{allowMultiple}}"
+
+  // Optional, force all uploads through the iframe solution, defaults to false
+  force-iframe-upload="{{forceIframeUpload}}"
+
+  on-success="onSuccess(response)" // Optional callback
+  on-error="onError(response)" // Optional callback
+  on-complete="onComplete(response)" // Optional, callback (called on both on-success and on-error)
+
+>Fileupload</div>
+```
+
+### Alternative usage scenarios
+#### The upload service
+The upload service that is used behind the scenes in the upload button.
+It can be used in a controller by injecting `upload`
+
 ```html
 <body ng-app="app" ng-controller="AppCtrl">
     <input name="myFile" type="file" />
@@ -65,42 +99,6 @@ angular.module('app').controller('AppCtrl', function ($scope, upload) {
 });
 ```
 
-### Or via the upload-button directive
-```html
-<body>
-  <div class="btn-upload" upload-button url="/upload" accept="image/*" on-success="onSuccess(response)" multiple="true">
-    <button class="btn btn-primary">Fileupload</button>
-  </div>
-</body>
-```
-
-### Or by specifying using the upload-button with a normal config
-
-```html
-<body>
-  <div class="btn-upload" upload-button="uploadConfig" on-success="onSuccess(response)">
-    <button class="btn btn-primary">Fileupload</button>
-  </div>
-</body>
-```
-
-```js
-angular.module('app').controller('AppCtrl', function ($scope) {
-    // Same config that you can send into $http
-    $scope.uploadConfig = {
-      url: '/upload',
-      data: {
-        extradata: 123
-        // Will contain the file or files when sent with the upload-button
-      }
-    };
-
-    $scope.onSuccess = function (response) {
-      console.log(response.data);
-    };
-}
-```
-
 ## Build it yourself!
 angular-upload is built with grunt and has a express backend for testing.
 
@@ -126,13 +124,17 @@ grunt webserver
 and you can access it through http://localhost:9001 and test the uploader
 
 To run the tests
-
-    grunt test
+```sh
+grunt test
+```
 
 or run in autotest mode
 
-    grunt autotest
+```sh
+grunt autotest
+```
 
 And when you're done minify it
-
-    grunt package
+```sh
+grunt package
+```
