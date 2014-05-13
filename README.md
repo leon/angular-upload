@@ -1,16 +1,21 @@
 # Angular Upload
-Upload using FormData or fallback to posting to an iframe
+Upload files using FormData, fall back to iframe upload when FormData isn't supported
 
-Check the example folder to see the files that are uploaded and the express.js server that is used as the backend.
+ - Works in all browsers
+ - Lightweight
+ - No dependency on jQuery
 
-Works in all browsers, even IE6. and has no dependency on jQuery.
+## Example
+```html
+<div
+  class="btn btn-primary btn-upload"
+  upload-button
+  url="/upload"
+  on-success="onSuccess(response)"
+>Upload</div>
+```
 
-The code is heavily inspired by the great [jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload)
-
-
-**This is a prototype** so it will contain bugs, and it isn't nowhere as complete as jQuery File Upload.
-
-## Usage
+## Install
 Install via bower
 ```sh
 bower install --save angular-upload
@@ -34,7 +39,7 @@ and to your less/css if you want the upload button
 
 And you are good to go!
 
-## Usage
+## Documentation over parameters
 
 ### Upload button
 The upload button masks the normal file input and makes it look like a button
@@ -44,11 +49,14 @@ The upload button masks the normal file input and makes it look like a button
   class="btn btn-primary btn-upload"
   upload-button
 
-  // Optional, object with all or some of the options below
-  options="uploadOptions"
-
   // Mandatory, the url of the backend that is going to handle the upload
   url="/upload"
+
+  // Optional, file param name for upload
+  param="file"
+
+  // Optional, object to send as form data with the upload
+  data="formData"
 
   // Optional, comma separated list or array of allowed mimetypes, defaults to allowing all types
   accept="{{acceptTypes}}"
@@ -56,9 +64,13 @@ The upload button masks the normal file input and makes it look like a button
   // Optional, Allow selecting multiple files, defaults to false
   multiple="{{allowMultiple}}"
 
-  // Optional, force all uploads through the iframe solution, defaults to false
+  // Optional, force all uploads through the iframe solution, defaults to false and should normally not be included
   force-iframe-upload="{{forceIframeUpload}}"
 
+  // Optional, make file input required and add ng-invalid-required if required is set to true on the input button
+  required="true|false"
+
+  on-upload="onUpload(files)" // Optional callback when uploading starts
   on-success="onSuccess(response)" // Optional callback
   on-error="onError(response)" // Optional callback
   on-complete="onComplete(response)" // Optional, callback (called on both on-success and on-error)
@@ -66,10 +78,8 @@ The upload button masks the normal file input and makes it look like a button
 >Fileupload</div>
 ```
 
-### Alternative usage scenarios
-#### The upload service
-The upload service that is used behind the scenes in the upload button.
-It can be used in a controller by injecting `upload`
+## Advanced documentation
+The upload service that is used behind the scenes in the upload button, can be used in a controller by injecting `upload`
 
 ```html
 <body ng-app="app" ng-controller="AppCtrl">
