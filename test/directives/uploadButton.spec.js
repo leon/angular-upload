@@ -14,7 +14,30 @@ describe('btnUpload', function () {
   });
 
   it('should display fileupload', function () {
-    var element = $compile('<div class="btn-upload" upload-button><button>Fileupload</button></div>')($rootScope);
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button><button>Fileupload</button></div>')($rootScope);
+    $rootScope.$digest();
     expect(element.html()).toContain('type="file"');
+  });
+
+  it('should set required', function () {
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button required="true"><button>Fileupload</button></div>')($rootScope);
+    var fileElement = element.find('input');
+    $rootScope.$digest();
+    expect(fileElement.attr('required')).toBeDefined();
+    expect(element.hasClass('ng-invalid-required')).toBe(true);
+  });
+
+  it('should set accept', function () {
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button accept="image/*"><button>Fileupload</button></div>')($rootScope);
+    var fileElement = element.find('input');
+    $rootScope.$digest();
+    expect(fileElement.attr('accept')).toEqual('image/*');
+  });
+
+  it('should set multiple', function () {
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button multiple="true"><button>Fileupload</button></div>')($rootScope);
+    var fileElement = element.find('input');
+    $rootScope.$digest();
+    expect(fileElement.attr('multiple')).toBeDefined();
   });
 });
