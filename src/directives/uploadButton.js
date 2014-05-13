@@ -4,12 +4,11 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
   return {
     restrict: 'EA',
     scope: {
-      options: '=?uploadButton',
-      multiple: '@',
-      accept: '@',
-      forceIFrameUpload: '@forceIframeUpload',
+      data: '=?data',
       url: '@',
+      param: '@',
       method: '@',
+      onUpload: '&',
       onSuccess: '&',
       onError: '&',
       onComplete: '&'
@@ -18,6 +17,7 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
 
       var el = angular.element(element);
       var fileInput = angular.element('<input type="file" />');
+      el.append(fileInput);
 
       fileInput.on('change', function uploadButtonFileInputChange() {
 
@@ -25,18 +25,14 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
           return;
         }
 
-        if (!scope.options) {
-          scope.options = {};
-        }
-
         var options = {
-          url: scope.url || scope.options.url,
-          method: scope.method || scope.options.method || 'POST',
-          forceIFrameUpload: scope.forceIFrameUpload || scope.options.forceIFrameUpload || false,
-          data: scope.options.data || {}
+          url: scope.url,
+          method: scope.method || 'POST',
+          forceIFrameUpload: scope.$eval(attr.forceIframeUpload) || false,
+          data: scope.data || {}
         };
 
-        options.data[scope.options.paramName || 'file'] = fileInput;
+        options.data[scope.param || 'file'] = fileInput;
 
         upload(options).then(
           function (response) {
@@ -50,18 +46,26 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
         );
       });
 
-      attr.$observe('accept', function uploadButtonAcceptObserve(value) {
-        fileInput.attr('accept', angular.isArray(value) ? value.join(',') : value);
+      // Add required to file input and ng-invalid-required
+      // Since the input is reset when upload is complete, we need to check something in the
+      // onSuccess and set required="false" when we feel that the upload is correct
+      attr.$observe('required', function uploadButtonRequiredObserve(value) {
+        var required = scope.$eval(value);
+        fileInput.attr('required', angular.isUndefined(required) || required);
+        element.toggleClass('ng-valid', !required);
+        element.toggleClass('ng-invalid ng-invalid-required', required);
       });
 
-      el.append(fileInput);
+      attr.$observe('accept', function uploadButtonAcceptObserve(value) {
+        fileInput.attr('accept', value);
+      });
 
       if (upload.support.formData) {
         var uploadButtonMultipleObserve = function () {
-          fileInput.attr('multiple', !!(scope.multiple && !scope.forceIFrameUpload));
+          fileInput.attr('multiple', !!(scope.$eval(attr.multiple) && !scope.$eval(attr.forceIframeUpload)));
         };
         attr.$observe('multiple', uploadButtonMultipleObserve);
-        attr.$observe('forceIFrameUpload', uploadButtonMultipleObserve);
+        attr.$observe('forceIframeUpload', uploadButtonMultipleObserve);
       }
     }
   };
