@@ -34,6 +34,10 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
 
         options.data[scope.param || 'file'] = fileInput;
 
+        scope.$apply(function () {
+          scope.onUpload({files: fileInput[0].files});
+        });
+
         upload(options).then(
           function (response) {
             scope.onSuccess({response: response});
