@@ -1,3 +1,13 @@
+# 1.0.9
+ - Remove options object since it made the uploadButton more advanced then it needed to be.
+ - Add onUpload callbacks which fires when the upload starts
+ - Add required attributes that adds ng-invalid ng-invalid-required when it's set.
+
+   Since the upload empties itself when done, you need set required="false" explicitly
+   when you are done uploading to remove the required attribute on the file input
+
+ - Better documentation and examples
+
 # 1.0.8
  - Retain headers if there are any #15
 
