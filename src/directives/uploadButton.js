@@ -53,16 +53,20 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       // Add required to file input and ng-invalid-required
       // Since the input is reset when upload is complete, we need to check something in the
       // onSuccess and set required="false" when we feel that the upload is correct
-      attr.$observe('required', function uploadButtonRequiredObserve(value) {
-        var required = scope.$eval(value);
-        fileInput.attr('required', angular.isUndefined(required) || required);
-        element.toggleClass('ng-valid', !required);
-        element.toggleClass('ng-invalid ng-invalid-required', required);
-      });
+      if ('required' in attr) {
+        attr.$observe('required', function uploadButtonRequiredObserve(value) {
+          var required = scope.$eval(value);
+          fileInput.attr('required', angular.isUndefined(required) || required);
+          element.toggleClass('ng-valid', !required);
+          element.toggleClass('ng-invalid ng-invalid-required', required);
+        });
+      }
 
-      attr.$observe('accept', function uploadButtonAcceptObserve(value) {
-        fileInput.attr('accept', value);
-      });
+      if ('accept' in attr) {
+        attr.$observe('accept', function uploadButtonAcceptObserve(value) {
+          fileInput.attr('accept', value);
+        });
+      }
 
       if (upload.support.formData) {
         var uploadButtonMultipleObserve = function () {

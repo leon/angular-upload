@@ -19,6 +19,13 @@ describe('btnUpload', function () {
     expect(element.html()).toContain('type="file"');
   });
 
+  it('should not set required of not present', function () {
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button><button>Fileupload</button></div>')($rootScope);
+    var fileElement = element.find('input');
+    $rootScope.$digest();
+    expect(fileElement.attr('required')).not.toBeDefined();
+  });
+
   it('should set required', function () {
     var element = $compile('<div class="btn btn-primary btn-upload" upload-button required="true"><button>Fileupload</button></div>')($rootScope);
     var fileElement = element.find('input');

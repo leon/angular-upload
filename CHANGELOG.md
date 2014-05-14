@@ -1,3 +1,6 @@
+# 1.1.0
+ - required was being set even though the attribute wasn't present
+
 # 1.0.9
  - Remove options object since it made the uploadButton more advanced then it needed to be.
  - Add onUpload callbacks which fires when the upload starts
