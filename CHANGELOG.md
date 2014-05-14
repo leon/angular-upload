@@ -1,4 +1,4 @@
-# 1.1.0
+# 1.0.10
  - required was being set even though the attribute wasn't present
 
 # 1.0.9
