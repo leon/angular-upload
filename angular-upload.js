@@ -47,15 +47,19 @@ angular.module('lr.upload.directives').directive('uploadButton', [
             scope.onComplete({ response: response });
           });
         });
-        attr.$observe('required', function uploadButtonRequiredObserve(value) {
-          var required = scope.$eval(value);
-          fileInput.attr('required', angular.isUndefined(required) || required);
-          element.toggleClass('ng-valid', !required);
-          element.toggleClass('ng-invalid ng-invalid-required', required);
-        });
-        attr.$observe('accept', function uploadButtonAcceptObserve(value) {
-          fileInput.attr('accept', value);
-        });
+        if ('required' in attr) {
+          attr.$observe('required', function uploadButtonRequiredObserve(value) {
+            var required = value === '' ? true : scope.$eval(value);
+            fileInput.attr('required', required);
+            element.toggleClass('ng-valid', !required);
+            element.toggleClass('ng-invalid ng-invalid-required', required);
+          });
+        }
+        if ('accept' in attr) {
+          attr.$observe('accept', function uploadButtonAcceptObserve(value) {
+            fileInput.attr('accept', value);
+          });
+        }
         if (upload.support.formData) {
           var uploadButtonMultipleObserve = function () {
             fileInput.attr('multiple', !!(scope.$eval(attr.multiple) && !scope.$eval(attr.forceIframeUpload)));
