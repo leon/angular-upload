@@ -55,8 +55,8 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
       // onSuccess and set required="false" when we feel that the upload is correct
       if ('required' in attr) {
         attr.$observe('required', function uploadButtonRequiredObserve(value) {
-          var required = scope.$eval(value);
-          fileInput.attr('required', angular.isUndefined(required) || required);
+          var required = value === '' ? true : scope.$eval(value);
+          fileInput.attr('required', required);
           element.toggleClass('ng-valid', !required);
           element.toggleClass('ng-invalid ng-invalid-required', required);
         });

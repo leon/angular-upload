@@ -34,6 +34,14 @@ describe('btnUpload', function () {
     expect(element.hasClass('ng-invalid-required')).toBe(true);
   });
 
+  iit('should set required even if empty attribute', function () {
+    var element = $compile('<div class="btn btn-primary btn-upload" upload-button required><button>Fileupload</button></div>')($rootScope);
+    var fileElement = element.find('input');
+    $rootScope.$digest();
+    expect(fileElement.attr('required')).toBeDefined();
+    expect(element.hasClass('ng-invalid-required')).toBe(true);
+  });
+
   it('should set accept', function () {
     var element = $compile('<div class="btn btn-primary btn-upload" upload-button accept="image/*"><button>Fileupload</button></div>')($rootScope);
     var fileElement = element.find('input');
