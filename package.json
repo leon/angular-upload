@@ -44,5 +44,8 @@
     "grunt-express": "~1.2.1",
     "express": "~3.4.8",
     "ejs": "~0.8.4"
+  },
+  "dependencies": {
+    "angular": ">=1.2.0"
   }
 }
