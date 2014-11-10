@@ -49,6 +49,9 @@ angular.module('lr.upload.formdata', [])
       // Apply FormData transform to the request
       config.transformRequest = formDataTransform;
 
+      // Set method to POST if not defined
+      config.method = config.method || 'POST';
+
       // Extend the headers so that the browser will set the correct content type
       config.headers = angular.extend(config.headers || {}, {
         'Content-Type': undefined
