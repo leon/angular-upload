@@ -92,6 +92,7 @@ angular.module('app').controller('AppCtrl', function ($scope, upload) {
   $scope.doUpload = function () {
     upload({
       url: '/upload',
+      method: 'POST',
       data: {
         anint: 123,
         aBlob: Blob([1,2,3]), // Only works in newer browsers
