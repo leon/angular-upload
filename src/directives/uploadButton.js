@@ -21,6 +21,9 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
 
       fileInput.on('change', function uploadButtonFileInputChange() {
 
+        // without this, iframeUpload always upload the first time picked file
+        var fileInput = angular.element(this); 
+
         if (fileInput[0].files && fileInput[0].files.length === 0) {
           return;
         }
