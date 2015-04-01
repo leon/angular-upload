@@ -106,7 +106,16 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
           });
         });
 
-      // Move file inputs to hidden form
+      // Add all existing data as hidden variables
+      angular.forEach(config.data, function (value, name) {
+        var input = angular.element('<input type="hidden" />');
+        input.attr('name', name);
+        input.val(value);
+        form.append(input);
+      });
+
+      // Move file inputs to hidden form, adding files last, as this is a
+      // requirement for uploading to S3
       angular.forEach(files, function (input) {
 
         // Clone the original input also cloning it's event
@@ -120,14 +129,6 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
         input.after(clone);
 
         // Move original input to hidden form
-        form.append(input);
-      });
-
-      // Add all existing data as hidden variables
-      angular.forEach(config.data, function (value, name) {
-        var input = angular.element('<input type="hidden" />');
-        input.attr('name', name);
-        input.val(value);
         form.append(input);
       });
 
