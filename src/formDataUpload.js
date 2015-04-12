@@ -19,6 +19,7 @@ angular.module('lr.upload.formdata', [])
             angular.forEach(el.files, function (file) {
               files.push(file);
             });
+            el.value = '';
           });
 
           // Do we have any files?
