@@ -26,6 +26,7 @@ angular.module('lr.upload.directives').directive('uploadButton', [
         var fileInput = angular.element('<input type="file" />');
         el.append(fileInput);
         fileInput.on('change', function uploadButtonFileInputChange() {
+          var fileInput = angular.element(this);
           if (fileInput[0].files && fileInput[0].files.length === 0) {
             return;
           }
@@ -82,6 +83,7 @@ angular.module('lr.upload.formdata', []).factory('formDataTransform', function (
           angular.forEach(el.files, function (file) {
             files.push(file);
           });
+          el.value = '';
         });
         if (files.length !== 0) {
           if (files.length > 1) {
@@ -104,6 +106,7 @@ angular.module('lr.upload.formdata', []).factory('formDataTransform', function (
   function ($http, formDataTransform) {
     return function formDataUpload(config) {
       config.transformRequest = formDataTransform;
+      config.method = config.method || 'POST';
       config.headers = angular.extend(config.headers || {}, { 'Content-Type': undefined });
       return $http(config);
     };
@@ -185,15 +188,15 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', [
             config: config
           });
         });
-        angular.forEach(files, function (input) {
-          var clone = input.clone(true);
-          input.after(clone);
-          form.append(input);
-        });
         angular.forEach(config.data, function (value, name) {
           var input = angular.element('<input type="hidden" />');
           input.attr('name', name);
           input.val(value);
+          form.append(input);
+        });
+        angular.forEach(files, function (input) {
+          var clone = input.clone(true);
+          input.after(clone);
           form.append(input);
         });
         config.$iframeTransportForm = form;

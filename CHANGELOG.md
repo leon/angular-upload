@@ -1,3 +1,7 @@
+# 1.0.12
+ - fall back to POST when not supplying method to upload service #17
+ - reset input value when done extracting files from input #26
+
 # 1.0.11
  - allow `require` to be specified without a value and thus be translated to a true
 
