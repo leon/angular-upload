@@ -123,7 +123,7 @@ module.exports = function (grunt) {
           '<%= config.minified %>': '<%= config.dist %>'
         },
         options: {
-          compress: true
+          compress: {}
         }
       }
     },
