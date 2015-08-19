@@ -6,6 +6,7 @@ angular.module('lr.upload.directives').directive('uploadButton', function(upload
     scope: {
       data: '=?data',
       url: '@',
+      id: '@',
       param: '@',
       method: '@',
       onUpload: '&',

@@ -14,6 +14,7 @@ angular.module('lr.upload.directives').directive('uploadButton', [
       scope: {
         data: '=?data',
         url: '@',
+        id: '@',
         param: '@',
         method: '@',
         onUpload: '&',
