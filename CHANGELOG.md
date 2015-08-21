@@ -1,3 +1,7 @@
+# 1.0.13
+ - Added possibility to set id on input
+ - Code documentation improvements
+
 # 1.0.12
  - fall back to POST when not supplying method to upload service #17
  - reset input value when done extracting files from input #26
