@@ -3,7 +3,10 @@
   "description": "AngularJS Upload, Handle your uploading with style",
   "version": "1.0.13",
   "author": "Leon Radley<leon@radley.se>",
-  "main": "angular-upload.js",
+  "main": [
+    "angular-upload.js",
+    "src/directives/btnUpload.min.css"
+  ],
   "dependencies": {
     "angular": ">=1.0.8"
   },
