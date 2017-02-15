@@ -87,7 +87,14 @@ angular.module('lr.upload.iframe', []).factory('iFrameUpload', function ($q, $ht
             if (!response.length) {
               throw new Error();
             }
-          } catch (e) {}
+          } catch (e) {
+            deferred.reject({
+              data: {
+                message: 'fail to upload file!'
+              }
+            });
+            return;
+          }
 
           // Fix for IE endless progress bar activity bug
           // (happens on form submits to iframe targets):
